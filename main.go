@@ -22,29 +22,14 @@ func carFleet(target int, speed []int, position []int) int {
 
 	fleets := 0
 
-	for remainder > 0 {
-		atTarget := 0
-		previousMin := math.MaxInt32
-		for i := remainder - 1; i >= 0; i-- {
-			newPos := position[i] + speed[i]
+	currentTime := math.MaxInt32
 
-			if newPos > previousMin {
-				newPos = previousMin
-			} else if newPos < previousMin {
-				previousMin = newPos
-			}
+	for i := remainder - 1; i >= 0; i-- {
+		timeLeft := int(math.Ceil(float64(target-position[i]) / float64(speed[i])))
 
-			if newPos >= target {
-				newPos = target
-				atTarget++
-				remainder--
-			}
-
-			position[i] = newPos
-		}
-
-		if atTarget > 0 {
+		if timeLeft != currentTime && timeLeft >= currentTime {
 			fleets++
+			currentTime = timeLeft
 		}
 	}
 
