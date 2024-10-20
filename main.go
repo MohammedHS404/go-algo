@@ -7,8 +7,8 @@ import (
 
 func main() {
 	target := 12
-	position := []int{0}
-	speed := []int{10}
+	position := []int{10, 8, 0, 5, 3}
+	speed := []int{2, 4, 1, 1, 3}
 	fleets := carFleet(target, speed, position)
 	println(fleets)
 }
@@ -18,13 +18,11 @@ func carFleet(target int, speed []int, position []int) int {
 
 	position, speed = sortPS(position, speed)
 
-	remainder := n
-
 	fleets := 0
 
-	currentTime := math.MaxInt32
+	currentTime := 0
 
-	for i := remainder - 1; i >= 0; i-- {
+	for i := n - 1; i >= 0; i-- {
 		timeLeft := int(math.Ceil(float64(target-position[i]) / float64(speed[i])))
 
 		if timeLeft != currentTime && timeLeft >= currentTime {
