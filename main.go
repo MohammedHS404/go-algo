@@ -1,14 +1,19 @@
 package main
 
+import "fmt"
+
 func main() {
-	a := [][]int{{1, 2}, {3, 4}}
-	b := [][]int{{1, 2}, {3, 4}}
-	c := [][]int{{0, 0}, {0, 0}}
+	// 4x4 matrix
+	a := [][]int{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}}
+	b := [][]int{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}}
+	c := [][]int{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}
 
-	matrix_multiply(a, b, c, 2)
+	n := 4
 
-	for i := 0; i < 2; i++ {
-		for j := 0; j < 2; j++ {
+	matrix_multiply_recursive(a, b, c, 0, 0, 0, 0, 0, 0, n)
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
 			print(c[i][j], " ")
 		}
 		println()
@@ -25,73 +30,35 @@ func matrix_multiply(A [][]int, B [][]int, C [][]int, n int) {
 	}
 }
 
-func matrix_multiply_recursive(A [][]int, B [][]int, C [][]int, n int) {
+func matrix_multiply_recursive(
+	A [][]int, B [][]int, C [][]int,
+	aRow int, aCol int, bRow int, bCol int, cRow int, cCol int, n int) {
 	if n == 1 {
-		C[0][0] = A[0][0] * B[0][0]
+		fmt.Printf("A[%d][%d] * B[%d][%d]\n", aRow, aCol, bRow, bCol)
+		C[cRow][cCol] += A[aRow][aCol] * B[bRow][bCol]
 		return
 	}
 
 	n2 := n / 2
 
-	A11 := make([][]int, n2)
-	A12 := make([][]int, n2)
-	A21 := make([][]int, n2)
-	A22 := make([][]int, n2)
-
-	for i := 0; i < n2; i++ {
-		A11[i] = make([]int, n2)
-		A12[i] = make([]int, n2)
-		A21[i] = make([]int, n2)
-		A22[i] = make([]int, n2)
-	}
-
-	B11 := make([][]int, n2)
-	B12 := make([][]int, n2)
-	B21 := make([][]int, n2)
-	B22 := make([][]int, n2)
-
-	for i := 0; i < n2; i++ {
-		B11[i] = make([]int, n2)
-		B12[i] = make([]int, n2)
-		B21[i] = make([]int, n2)
-		B22[i] = make([]int, n2)
-	}
-
-	C11 := make([][]int, n2)
-	C12 := make([][]int, n2)
-	C21 := make([][]int, n2)
-	C22 := make([][]int, n2)
-
-	for i := 0; i < n2; i++ {
-		C11[i] = make([]int, n2)
-		C12[i] = make([]int, n2)
-		C21[i] = make([]int, n2)
-		C22[i] = make([]int, n2)
-	}
-
-	for i := 0; i < n2; i++ {
-		for j := 0; j < n2; j++ {
-			A11[i][j] = A[i][j]
-			A12[i][j] = A[i][j+n2]
-			A21[i][j] = A[i+n2][j]
-			A22[i][j] = A[i+n2][j+n2]
-
-			B11[i][j] = B[i][j]
-			B12[i][j] = B[i][j+n2]
-			B21[i][j] = B[i+n2][j]
-			B22[i][j] = B[i+n2][j+n2]
-		}
-	}
-
-	matrix_multiply_recursive(A11, B11, C11, n2/2)
-	matrix_multiply_recursive(A11, B12, C12, n2/2)
-
-	matrix_multiply_recursive(A21, B11, C21, n2/2)
-	matrix_multiply_recursive(A21, B12, C22, n2/2)
-
-	matrix_multiply_recursive(A12, B21, C11, n2/2)
-	matrix_multiply_recursive(A12, B22, C12, n2/2)
-
-	matrix_multiply_recursive(A22, B21, C21, n2/2)
-	matrix_multiply_recursive(A22, B22, C22, n2/2)
+	// C11 = A11 * B11 + A12 * B21
+	// A11 * B11
+	matrix_multiply_recursive(A, B, C, aRow, aCol, bRow, bCol, cRow, cCol, n2)
+	// A12 * B21
+	matrix_multiply_recursive(A, B, C, aRow, aCol+n2, bRow+n2, bCol, cRow, cCol, n2)
+	// C12 = A11 * B12 + A12 * B22
+	// A11 * B12
+	matrix_multiply_recursive(A, B, C, aRow, aCol, bRow, bCol+n2, cRow, cCol+n2, n2)
+	// A12 * B22
+	matrix_multiply_recursive(A, B, C, aRow, aCol+n2, bRow+n2, bCol+n2, cRow, cCol+n2, n2)
+	// C21 = A21 * B11 + A22 * B21
+	// A21 * B11
+	matrix_multiply_recursive(A, B, C, aRow+n2, aCol, bRow, bCol, cRow+n2, cCol, n2)
+	// A22 * B21
+	matrix_multiply_recursive(A, B, C, aRow+n2, aCol+n2, bRow+n2, bCol, cRow+n2, cCol, n2)
+	// C22 = A21 * B12 + A22 * B22
+	// A21 * B12
+	matrix_multiply_recursive(A, B, C, aRow+n2, aCol, bRow, bCol+n2, cRow+n2, cCol+n2, n2)
+	// A22 * B22
+	matrix_multiply_recursive(A, B, C, aRow+n2, aCol+n2, bRow+n2, bCol+n2, cRow+n2, cCol+n2, n2)
 }
