@@ -25,25 +25,30 @@ func main() {
 	var current = head
 
 	for current != nil {
+		fmt.Println(current.Data)
+
+		next := current.Next
+		current.Next = nil
+
 		if current.Data < x {
 			if bxNode == nil {
-				bxNode = NewNode(current.Data)
+				bxNode = current
 				bxHead = bxNode
 			} else {
-				bxNode.Append(current.Data)
+				bxNode.Next = current
 				bxNode = bxNode.Next
 			}
 		} else {
 			if axNode == nil {
-				axNode = NewNode(current.Data)
+				axNode = current
 				axHead = axNode
 			} else {
-				axNode.Append(current.Data)
+				axNode.Next = current
 				axNode = axNode.Next
 			}
 		}
 
-		current = current.Next
+		current = next
 	}
 
 	bxNode.Next = axHead
