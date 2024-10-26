@@ -16,25 +16,27 @@ func main() {
 
 	x := 5
 
-	var bxNode *Node[int] = NewNode(-1)
-	bxHead := bxNode
+	var bxNode *Node[int] = nil
+	var bxHead *Node[int] = nil
 
-	var axNode *Node[int] = NewNode(-1)
-	axHead := axNode
+	var axNode *Node[int] = nil
+	var axHead *Node[int] = nil
 
 	var current = head
 
 	for current != nil {
 		if current.Data < x {
-			if bxNode.Data == -1 {
-				bxNode.Data = current.Data
+			if bxNode == nil {
+				bxNode = NewNode(current.Data)
+				bxHead = bxNode
 			} else {
 				bxNode.Append(current.Data)
 				bxNode = bxNode.Next
 			}
 		} else {
-			if axNode.Data == -1 {
-				axNode.Data = current.Data
+			if axNode == nil {
+				axNode = NewNode(current.Data)
+				axHead = axNode
 			} else {
 				axNode.Append(current.Data)
 				axNode = axNode.Next
