@@ -30,11 +30,5 @@ func deleteMiddleNode(node *Node[int]) {
 	}
 
 	node.Data = node.Next.Data
-
-	if node.Next.Next == nil {
-		node.Next = nil
-		return
-	}
-
-	deleteMiddleNode(node.Next)
+	node.Next = node.Next.Next
 }
