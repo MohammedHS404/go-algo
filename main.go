@@ -3,49 +3,38 @@ package main
 import "fmt"
 
 func main() {
-	node := NewNode(1)
-	node.Append(2)
-	node.Append(3)
-	node.Append(4)
-	node.Append(5)
-	node.Append(6)
-	node.Append(7)
+	head := NewNode(1)
+	head.Append(2)
+	head.Append(3)
+	head.Append(4)
+	head.Append(5)
+	head.Append(6)
+	head.Append(7)
 
-	k := 3
+	node := head
 
-	kth := getKthToLastRecursive(node, k, 0)
+	k := 6
 
-	fmt.Println(kth.String())
+	for i := 0; i < k; i++ {
+		node = node.Next
+	}
+
+	deleteMiddleNode(node)
+
+	fmt.Println(head.String())
 }
 
-func getKthToLastRecursive(node *Node[int], k int, counter int) *Node[int] {
-	if node == nil {
-		return nil
+func deleteMiddleNode(node *Node[int]) {
+	if node == nil || node.Next == nil {
+		return
 	}
 
-	current := getKthToLastRecursive(node.Next, k, counter+1)
+	node.Data = node.Next.Data
 
-	if counter == k {
-		return node
+	if node.Next.Next == nil {
+		node.Next = nil
+		return
 	}
 
-	return current
-}
-
-func getKthToLastIterative(node *Node[int], k int) *Node[int] {
-	counter := 0
-	current := node
-
-	pointer := node
-
-	for current != nil {
-		if counter == k {
-			pointer = current
-			break
-		}
-
-		counter++
-		current = current.Next
-	}
-	return pointer
+	deleteMiddleNode(node.Next)
 }
