@@ -15,7 +15,7 @@ func main() {
 
 	for i := 0; i < 100000; i++ {
 		a = []string{"cat", "dog", "Rabbit", "Rat", "Turtle"}
-		permuteRandomWithAll(a)
+		permuteWithoutIdentity(a)
 		for j := 0; j < len(a); j++ {
 			mp[a[j]][j]++
 		}
@@ -45,6 +45,14 @@ func permuteRandomWithAll[T any](a []T) {
 	n := len(a)
 	for i := 0; i < n; i++ {
 		temp := rand.IntN(n)
+		a[i], a[temp] = a[temp], a[i]
+	}
+}
+
+func permuteWithoutIdentity[T any](a []T) {
+	n := len(a)
+	for i := 0; i < n-1; i++ {
+		temp := rand.IntN(n-1-i) + i + 1
 		a[i], a[temp] = a[temp], a[i]
 	}
 }
