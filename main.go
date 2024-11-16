@@ -15,7 +15,7 @@ func main() {
 
 	for i := 0; i < 100000; i++ {
 		a = []string{"cat", "dog", "Rabbit", "Rat", "Turtle"}
-		randomPermuteWithoutIdentity(a)
+		permuteRandom(a)
 		for j := 0; j < len(a); j++ {
 			mp[a[j]][j]++
 		}
@@ -33,38 +33,10 @@ func main() {
 
 }
 
-func randomPermuteWithoutIdentity[T any](a []T) {
+func permuteRandom[T any](a []T) {
 	n := len(a)
-	for i := 0; i < n; i++ {
-		// Determine `tempBefore` if applicable
-		tempBefore := -1
-		if i > 0 {
-			tempBefore = rand.IntN(i) // Handles both `i == 1` and `i > 1`
-		}
-
-		// Determine `tempAfter` if applicable
-		tempAfter := -1
-		if i < n-1 {
-			tempAfter = rand.IntN(n-i-1) + i + 1
-		}
-
-		// Choose `temp` based on availability of `tempBefore` and `tempAfter`
-		var temp int
-		if tempBefore != -1 && tempAfter != -1 {
-			if rand.IntN(2) == 0 {
-				temp = tempBefore
-			} else {
-				temp = tempAfter
-			}
-		} else if tempBefore != -1 {
-			temp = tempBefore
-		} else if tempAfter != -1 {
-			temp = tempAfter
-		} else {
-			panic("temp is -1") // This should not occur if logic is correct
-		}
-
-		// Swap elements
+	for i := 0; i < n-1; i++ {
+		temp := rand.IntN(n-i) + i
 		a[i], a[temp] = a[temp], a[i]
 	}
 }
