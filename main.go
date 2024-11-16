@@ -40,23 +40,29 @@ func main() {
 
 func weightedRandom(a []string, weights []int) (string, error) {
 	n := len(a)
+	if n == 0 || len(weights) != n {
+		return "", fmt.Errorf("weightedRandom: invalid input")
+	}
+
 	accumWeights := make([]int, n)
+
 	accumWeights[0] = weights[0]
+
 	for i := 1; i < n; i++ {
+		if weights[i] < 0 {
+			return "", fmt.Errorf("weightedRandom: negative weights are not allowed")
+		}
 		accumWeights[i] = accumWeights[i-1] + weights[i]
 	}
 
-	for i := 0; i < n; i++ {
-		accumWeights[i] = accumWeights[i] * n
+	if accumWeights[n-1] == 0 {
+		return "", fmt.Errorf("weightedRandom: sum of weights must be greater than 0")
 	}
 
-	wi := rand.IntN(accumWeights[n-1])
+	wi := rand.IntN(accumWeights[n-1]) // random number in the range [0, total weight)
 
-	for i := 0; i < n; i++ {
-		if wi < accumWeights[i] {
-			return a[i], nil
-		}
-	}
+	// Use binary search to find the correct index
+	index := sort.Search(n, func(i int) bool { return accumWeights[i] > wi })
 
-	return "", fmt.Errorf("weightedRandom: should not reach here")
+	return a[index], nil
 }
