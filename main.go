@@ -5,6 +5,54 @@ import (
 )
 
 func main() {
+	// print item, position, and frequency
+	a := []string{"cat", "dog", "Rabbit", "Rat", "Turtle", "Fish", "Bird", "Lion", "Tiger", "Elephant", "Monkey", "Giraffe", "Zebra", "Horse", "Cow", "Pig", "Sheep", "Goat", "Chicken", "Duck", "Turkey", "Penguin", "Parrot", "Ostrich", "Eagle", "Hawk", "Falcon", "Owl", "Sparrow", "Robin", "Bluejay", "Cardinal", "Woodpecker", "Hummingbird", "Seagull", "Pelican", "Swan", "Goose", "Flamingo", "Stork", "Crane", "Heron", "Pigeon", "Crow", "Raven", "Vulture", "Albatross", "Kiwi", "Emu", "Cassowary", "Rhea", "Roadrunner", "Quail", "Loon", "Grebe", "Cormorant", "Anhinga", "Frigatebird", "Booby", "Gannet", "Tern", "Skua", "Jaeger", "Phalarope", "Avocet", "Stilt", "Sandpiper", "Plover", "Killdeer", "Turnstone", "Dunlin", "Sanderling", "Curlew", "Godwit", "Snipe", "Woodcock", "Ruff", "Redshank", "Greenshank", "Spotted Sandpiper", "Solitary Sandpiper", "Willet", "Upland Sandpiper", "Whimbrel", "Curlew Sandpiper", "Bar-tailed Godwit", "Black-tailed Godwit", "Hudsonian Godwit", "Marbled Godwit", "Ruddy Turnstone", "Black Turnstone", "Great Knot", "Red Knot", "Surfbird", "Ruddy Turnstone", "Sanderling", "Dunlin", "Purple Sandpiper", "Rock Sandpiper", "Baird's Sandpiper", "Least Sandpiper", "White-rumped Sandpiper", "Buff-breasted Sandpiper", "Pectoral Sandpiper", "Semipalmated Sandpiper", "Western Sandpiper", "Short-billed Dowitcher", "Long-billed Dowitch"}
+
+	mp := make(map[string]int)
+
+	for i := 0; i < len(a); i++ {
+		mp[a[i]] = i
+	}
+
+	hashmp := make(map[int]int)
+
+	n := int64(len(a))
+	print("n: ", n, "\n")
+	n = factorial(int64(n))
+	print("n!: ", n, "\n")
+
+	for i := int64(0); i < n; i++ {
+		sample := randomSample[string](a, 10)
+		hash := 0
+		for j := 0; j < len(sample); j++ {
+			hash += mp[sample[j]]
+		}
+
+		hashmp[hash]++
+	}
+
+	for k, v := range hashmp {
+		println(k, " ", v)
+	}
+
+}
+func factorial(number int64) int64 {
+
+	// if the number has reached 1 then we have to
+	// return 1 as 1 is the minimum value we have to multiply with
+	if number == 1 {
+		return 1
+	}
+
+	// multiplying with the current number and calling the function
+	// for 1 lesser number
+	factorialOfNumber := number * factorial(number-1)
+
+	// return the factorial of the current number
+	return factorialOfNumber
+}
+
+func testPermutation() {
 	a := []string{"cat", "dog", "Rabbit", "Rat", "Turtle"}
 
 	mp := make(map[string]map[int]int)
@@ -24,13 +72,12 @@ func main() {
 	for i := 0; i < len(a); i++ {
 		for j := 0; j < len(a); j++ {
 			for k := 0; k < len(a); k++ {
-				// print item, position, and frequency
+
 				println(a[j], " ", k, " ", mp[a[j]][k], " ")
 			}
 		}
 		println()
 	}
-
 }
 
 func permuteRandom[T any](a []T) {
@@ -100,4 +147,15 @@ func permuteAllWithoutIdentity[T any](a []T) {
 
 		a[i], a[temp] = a[temp], a[i]
 	}
+}
+
+func randomSample[T any](a []T, m int) []T {
+	s := make([]T, m)
+	n := len(a)
+	for i := 0; i < m; i++ {
+		randomIndex := rand.IntN(n-i) + i
+		s[i] = a[randomIndex]
+	}
+
+	return s
 }
