@@ -8,16 +8,21 @@ func main() {
 
 	println("After heapify")
 
-	HeapSort(arr)
+	HeapSort(arr, false)
 
 	printTreeBFS(arr)
 }
 
-func HeapSort(arr []int) {
-	buildMaxHeap(arr)
+func HeapSort(arr []int, isMax bool) {
+	buildHeap(arr, isMax)
 	for i := len(arr) - 1; i >= 0; i-- {
 		arr[0], arr[i] = arr[i], arr[0]
-		maxHeapify(arr[:i], 0)
+
+		if isMax {
+			maxHeapify(arr[:i], 0)
+		} else {
+			minHeapify(arr[:i], 0)
+		}
 	}
 }
 
@@ -46,9 +51,13 @@ func printTreeBFS(arr []int) {
 	println()
 }
 
-func buildMaxHeap(arr []int) {
+func buildHeap(arr []int, isMax bool) {
 	for i := len(arr) / 2; i >= 0; i-- {
-		maxHeapify(arr, i)
+		if isMax {
+			maxHeapify(arr, i)
+		} else {
+			minHeapify(arr, i)
+		}
 	}
 }
 
@@ -69,6 +78,26 @@ func maxHeapify(arr []int, i int) {
 	if largest != i {
 		arr[i], arr[largest] = arr[largest], arr[i]
 		maxHeapify(arr, largest)
+	}
+}
+
+func minHeapify(arr []int, i int) {
+	left := left(i)
+	right := right(i)
+
+	smallest := i
+
+	if left < len(arr) && arr[left] < arr[i] {
+		smallest = left
+	}
+
+	if right < len(arr) && arr[right] < arr[smallest] {
+		smallest = right
+	}
+
+	if smallest != i {
+		arr[i], arr[smallest] = arr[smallest], arr[i]
+		minHeapify(arr, smallest)
 	}
 }
 
